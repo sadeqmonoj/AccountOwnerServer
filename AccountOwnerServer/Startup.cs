@@ -1,4 +1,5 @@
 using AccountOwnerServer.Extensions;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,7 @@ namespace AccountOwnerServer
             services.ConfigureLoggerService();
             services.ConfigureMySqlContext(Configuration);
             services.ConfigureRepositoryWrapper();
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 
