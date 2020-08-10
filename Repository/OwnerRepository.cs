@@ -19,9 +19,23 @@ namespace Repository
 
         public PagedList<Owner> GetOwners(OwnerParameters ownerParameters)
         {
-            return PagedList<Owner>.ToPagedList(FindAll().OrderBy(on => on.Name),
+            var owners = FindByCondition(o => o.DateOfBirth.Year >= ownerParameters.MinYearOfBirth &&
+                                o.DateOfBirth.Year <= ownerParameters.MaxYearOfBirth);
+                            
+
+            SearchByName(ref owners, ownerParameters.Name);
+
+            return PagedList<Owner>.ToPagedList(owners,
                 ownerParameters.PageNumber,
                 ownerParameters.PageSize);
+        }
+
+        private void SearchByName(ref IQueryable<Owner> owners, string ownerName)
+        {
+            if (!owners.Any() || string.IsNullOrWhiteSpace(ownerName))
+                return;
+
+            owners = owners.Where(o => o.Name.ToLower().Contains(ownerName.Trim().ToLower()));
         }
 
         public Owner GetOwnerById(Guid ownerId)
